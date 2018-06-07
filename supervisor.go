@@ -5,6 +5,7 @@ import (
     "log"
     "os/exec"
     "strings"
+    "os"
 )
 
 // author = 'Mohamed Laabid'
@@ -55,6 +56,32 @@ func snmpget(user string,password string,ipadrr string,oid string) string {
         }
 }
 
+func snmpget_requests(input string){
+
+    if container_info(input)[0]!= "false"{
+        fmt.Println("Image : "+container_info(input)[1])
+        fmt.Println("IP : "+container_info(input)[2])        
+        fmt.Println("Running time : "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.2.1.1.3.0"))
+        fmt.Println("Total Processes : "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.2.1.25.1.6.0"))
+        fmt.Println("Total Swap Size: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.3.0"))
+        fmt.Println("Available Swap Space: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.4.0"))
+        fmt.Println("Total RAM used: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.6.0"))
+        fmt.Println("Total RAM Free: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.11.0"))
+        fmt.Println("Total size of the disk/partion (kBytes): "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.6.1"))
+        fmt.Println("Available space on the disk: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.7.1"))
+        fmt.Println("Used space on the disk: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.8.1"))
+        fmt.Println("Percentage of space used on disk: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.9.1"))
+    }else{
+        a := "\033[31m"+input+" is not running\033[39m"
+        output, err := exec.Command("echo", "-e",a).CombinedOutput()
+        if err != nil {
+          os.Stderr.WriteString(err.Error())
+        }
+        fmt.Println(string(output))
+        fmt.Println("Image : "+container_info(input)[1])     
+    }
+}
+
 func main(){
 
 
@@ -62,16 +89,8 @@ func main(){
     var input string
     fmt.Scanln(&input)
 
-    fmt.Println("Running time : "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.2.1.1.3.0"))
-    fmt.Println("Total Processes : "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.2.1.25.1.6.0"))
-    fmt.Println("Total Swap Size: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.3.0"))
-    fmt.Println("Available Swap Space: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.4.0"))
-    fmt.Println("Total RAM used: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.6.0"))
-    fmt.Println("Total RAM Free: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.4.11.0"))
-    fmt.Println("Total size of the disk/partion (kBytes): "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.6.1"))
-    fmt.Println("Available space on the disk: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.7.1"))
-    fmt.Println("Used space on the disk: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.8.1"))
-    fmt.Println("Percentage of space used on disk: "+snmpget("bootstrap","azertyui",container_info(input)[2],"1.3.6.1.4.1.2021.9.1.9.1"))
+    snmpget_requests(input)
+
 
 }   
 
